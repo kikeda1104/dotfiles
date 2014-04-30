@@ -170,19 +170,6 @@ nnoremap <silent>, vs :<C-U>VimShell<CR>
 " inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
 inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>" 
 
-" Plugin key-mappings.
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal') 
-  set conceallevel=2 concealcursor=i
-endif
-
 autocmd BufNewFile, BufRead *.text set spell
 autocmd BufNewFile, BufRead *.md set spell
 
@@ -196,3 +183,72 @@ autocmd BufEnter * if (expand("%") =~ "_spec\.rb$") || (expand("%") =~ "^spec.*\
 " neocomplcacheはもうメンテされていない
 let g:neocomplcache_snippets_dir = $HOME . '/.vim/snippets'
 nnoremap <Space>se :<C-U>NeoComplCacheEditSnippets<CR>
+
+"Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+  
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+
+let g:neosnippet#enable_snipmate_compatibility = 1
+
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets'
+
+set runtimepath +=$HOME/.vim/snippets/snippets
+
+set encoding=utf-8
+set fileencodings=ucs_bom,utf8,ucs-2le,ucs-2
+set fileformats=unix,dos,mac
+
+  if &encoding !=# 'utf-8'
+  set encoding=japan
+  set fileencoding=japan
+  endif
+  if has('iconv')
+  let s:enc_euc = 'euc-jp'
+  let s:enc_jis = 'iso-2022-jp'
+
+  if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
+  let s:enc_euc = 'eucjp-ms'
+  let s:enc_jis = 'iso-2022-jp-3'
+  elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
+  let s:enc_euc = 'euc-jisx0213'
+  let s:enc_jis = 'iso-2022-jp-3'
+  endif
+  if &encoding ==# 'utf-8'
+  let s:fileencodings_default = &fileencodings
+  let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
+  let &fileencodings = s:fileencodings_default .','. &fileencodings
+  unlet s:fileencodings_default
+  else
+  let &fileencodings = &fileencodings .','. s:enc_jis
+  set fileencodings+=utf-8,ucs-2le,ucs-2
+  if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
+  set fileencodings+=cp932
+  set fileencodings-=euc-jp
+  set fileencodings-=euc-jisx0213
+  set fileencodings-=eucjp-ms
+  let &encoding = s:enc_euc
+  let &fileencoding = s:enc_euc
+  else
+  let &fileencodings = &fileencodings .','. s:enc_euc
+  endif
+  endif
+  " 定数を処分
+  unlet s:enc_euc
+  unlet s:enc_jis
+  endif
+  "     }}} 
