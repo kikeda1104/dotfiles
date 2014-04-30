@@ -133,3 +133,9 @@ precmd() {
       #      ;;
   esac
 }
+
+fpath=(~/.zsh/completion $fpath)
+
+autoload -U compinit
+compinit -u
+
