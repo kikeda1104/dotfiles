@@ -54,6 +54,8 @@ NeoBundle 'Shougo/vimproc', {
       NeoBundle 'git://github.com/othree/javascript-libraries-syntax.vim'
       NeoBundle 'git://github.com/tpope/vim-fugitive.git'
       NeoBundle 'Shougo/neosnippet-snippets'
+      NeoBundle 'tpope/vim-bundler'
+      NeoBundle 'tpope/vim-endwise'
 NeoBundleLazy 'alpaca-tc/neorspec.vim', {
     \ 'depends' : 'tpope/vim-rails',
     \ 'autoload' : {
