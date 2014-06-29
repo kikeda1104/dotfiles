@@ -34,7 +34,6 @@ NeoBundle 'Shougo/vimproc', {
       NeoBundle 'git://github.com/tyru/open-browser.vim.git'
       NeoBundle 'git://github.com/tpope/vim-cucumber.git'
       NeoBundle 'git://github.com/pangloss/vim-javascript.git'
-      NeoBundle 'git://github.com/derekwyatt/vim-scala.git'
       NeoBundle 'git://github.com/joker1007/vim-ruby-heredoc-syntax.git'
       NeoBundle 'git://github.com/kchmck/vim-coffee-script.git'
       NeoBundle 'git://github.com/thoughtbot/vim-rspec.git'
@@ -49,13 +48,20 @@ NeoBundle 'Shougo/vimproc', {
       NeoBundle 'git://github.com/tpope/vim-haml.git'
       NeoBundle 'git://github.com/joker1007/unite-pull-request'
       NeoBundle 'git://github.com/LeafCage/yankround.vim.git'
-      NeoBundle 'git://github.com/osyo-manga/vim-over.git'
       NeoBundle 'git://github.com/vim-scripts/dbext.vim.git'
       NeoBundle 'git://github.com/othree/javascript-libraries-syntax.vim'
       NeoBundle 'git://github.com/tpope/vim-fugitive.git'
-      NeoBundle 'Shougo/neosnippet-snippets'
-      NeoBundle 'tpope/vim-bundler'
-      NeoBundle 'tpope/vim-endwise'
+      NeoBundle 'Shougo/neocomplcache'
+      NeoBundle 'yaasita/ore_markdown', {
+            \ 'build' : {
+            \     'windows' : 'bundle install --gemfile .\bin\Gemfile',
+            \     'mac' : 'bundle install --gemfile ./bin/Gemfile',
+            \     'unix' : 'bundle install --gemfile ./bin/Gemfile'
+            \    },
+            \ }
+      NeoBundle 'jistr/vim-nerdtree-tabs'
+          let g:nerdtree_tabs_open_on_console_startup=1
+
 NeoBundleLazy 'alpaca-tc/neorspec.vim', {
     \ 'depends' : 'tpope/vim-rails',
     \ 'autoload' : {
@@ -74,6 +80,7 @@ NeoBundleLazy 'Shougo/unite.vim', {
       \}
 
 NeoBundleLazy 'Shougo/neosnippet'
+
 NeoBundleLazy 'Shougo/vimshell', {
       \ 'depends' : 'Shougo/vimproc',
       \ 'autoload' : {
@@ -90,18 +97,16 @@ NeoBundleCheck
       syntax on
 
 
-      " SSH クライアントの設定によってはマウスが使える（putty
-      " だと最初からいける）
-      set mouse=n
+set mouse=n
 " 編集中のファイルのディレクトリに移動
 noremap ,d :execute ":lcd" . expand("%:p:h")<CR>
 
 if has("autocmd")
-            autocmd BufReadPost *
-                \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-                \   exe "normal! g'\"" |
-                \ endif
-    endif
+    autocmd BufReadPost *
+        \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+        \   exe "normal! g'\"" |
+        \ endif
+endif
 " 行番号を表示
 set number
 " color scheme
@@ -172,85 +177,53 @@ nnoremap <silent>, vs :<C-U>VimShell<CR>
 " inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
 inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>" 
 
+" Plugin key-mappings.
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal') 
+  set conceallevel=2 concealcursor=i
+endif
+
 autocmd BufNewFile, BufRead *.text set spell
 autocmd BufNewFile, BufRead *.md set spell
 
 command Vs VimShell 
 command Nt NERDTree
+command Rc Rcontroller
+command Rm Rmodel
+command Rv Rview
 
 set backspace=indent,eol,start
 
-autocmd BufEnter * if exists("b:rails_root") | NeoComplCacheSetFileType ruby.rails | endif
-autocmd BufEnter * if (expand("%") =~ "_spec\.rb$") || (expand("%") =~ "^spec.*\.rb$") | NeoComplCacheSetFileType ruby.rspec | endif
-" neocomplcacheはもうメンテされていない
-let g:neocomplcache_snippets_dir = $HOME . '/.vim/snippets'
-nnoremap <Space>se :<C-U>NeoComplCacheEditSnippets<CR>
 
-"Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+"MyNERDTreeで開く
+"固定したいWindowを選択してMyNERDTreeWindowLockでロック
+"MyNERDTreeWindowUnLockで解除
+"あとは普通にEnterで開けばロックしたWindowは避けるはず
+command! -nargs=0 MyNERDTree NERDTreeToggle | call SetMyNERD()
+command! -nargs=0 MyNERDTreeWindowLock let w:lock_window = 1
+command! -nargs=0 MyNERDTreeWindowUnLock let w:lock_window = 0
+function! SetMyNERD()
+  nnoremap <buffer> <ENTER> :call MyNERDTreeOpenFile()<CR>
+endfunction
 
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
-  
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
-
-let g:neosnippet#enable_snipmate_compatibility = 1
-
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets'
-
-set runtimepath +=$HOME/.vim/snippets/snippets
-
-set encoding=utf-8
-set fileencodings=ucs_bom,utf8,ucs-2le,ucs-2
-set fileformats=unix,dos,mac
-
-  if &encoding !=# 'utf-8'
-  set encoding=japan
-  set fileencoding=japan
+function! MyNERDTreeOpenFile()
+  wincmd p
+  if !exists('w:lock_window')
+    let w:lock_window = 0
   endif
-  if has('iconv')
-  let s:enc_euc = 'euc-jp'
-  let s:enc_jis = 'iso-2022-jp'
-
-  if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
-  let s:enc_euc = 'eucjp-ms'
-  let s:enc_jis = 'iso-2022-jp-3'
-  elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
-  let s:enc_euc = 'euc-jisx0213'
-  let s:enc_jis = 'iso-2022-jp-3'
-  endif
-  if &encoding ==# 'utf-8'
-  let s:fileencodings_default = &fileencodings
-  let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
-  let &fileencodings = s:fileencodings_default .','. &fileencodings
-  unlet s:fileencodings_default
+  let l:lock = w:lock_window
+  wincmd p
+  let node = g:NERDTreeFileNode.GetSelected()
+  if l:lock && !node.path.isDirectory
+    call nerdtree#invokeKeyMap("i")
   else
-  let &fileencodings = &fileencodings .','. s:enc_jis
-  set fileencodings+=utf-8,ucs-2le,ucs-2
-  if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
-  set fileencodings+=cp932
-  set fileencodings-=euc-jp
-  set fileencodings-=euc-jisx0213
-  set fileencodings-=eucjp-ms
-  let &encoding = s:enc_euc
-  let &fileencoding = s:enc_euc
-  else
-  let &fileencodings = &fileencodings .','. s:enc_euc
+    call nerdtree#invokeKeyMap("o")
   endif
-  endif
-  " 定数を処分
-  unlet s:enc_euc
-  unlet s:enc_jis
-  endif
-  "     }}} 
+endfunction
