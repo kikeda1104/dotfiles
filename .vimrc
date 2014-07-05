@@ -201,29 +201,6 @@ command Rv Rview
 
 set backspace=indent,eol,start
 
+inoremap <silent> jj <ESC>
 
-"MyNERDTreeで開く
-"固定したいWindowを選択してMyNERDTreeWindowLockでロック
-"MyNERDTreeWindowUnLockで解除
-"あとは普通にEnterで開けばロックしたWindowは避けるはず
-command! -nargs=0 MyNERDTree NERDTreeToggle | call SetMyNERD()
-command! -nargs=0 MyNERDTreeWindowLock let w:lock_window = 1
-command! -nargs=0 MyNERDTreeWindowUnLock let w:lock_window = 0
-function! SetMyNERD()
-  nnoremap <buffer> <ENTER> :call MyNERDTreeOpenFile()<CR>
-endfunction
-
-function! MyNERDTreeOpenFile()
-  wincmd p
-  if !exists('w:lock_window')
-    let w:lock_window = 0
-  endif
-  let l:lock = w:lock_window
-  wincmd p
-  let node = g:NERDTreeFileNode.GetSelected()
-  if l:lock && !node.path.isDirectory
-    call nerdtree#invokeKeyMap("i")
-  else
-    call nerdtree#invokeKeyMap("o")
-  endif
-endfunction
+let g:unite_enable_start_insert=1
