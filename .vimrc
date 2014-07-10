@@ -178,7 +178,6 @@ nnoremap <silent>, vs :<C-U>VimShell<CR>
 "unlet s:bundle
 " }}}
 
-<<<<<<< HEAD
 autocmd BufNewFile, BufRead *.text set spell
 autocmd BufNewFile, BufRead *.md set spell
 
