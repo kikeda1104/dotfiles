@@ -7,6 +7,11 @@ set softtabstop=0
 set expandtab
 set title
 set clipboard=unnamed,autoselect
+" モードラインを有効にする
+set modeline
+
+" 3行目までをモードラインとして検索する
+set modelines=3
 
 if has('vim_starting')
               execute 'set runtimepath+=' . expand('~/.vim/bundle/neobundle.vim')
@@ -54,8 +59,17 @@ NeoBundle 'Shougo/vimproc', {
       NeoBundle 'git://github.com/othree/javascript-libraries-syntax.vim'
       NeoBundle 'git://github.com/tpope/vim-fugitive.git'
       NeoBundle 'Shougo/neosnippet-snippets'
-      NeoBundle 'tpope/vim-bundler'
-      NeoBundle 'tpope/vim-endwise'
+      NeoBundle 'yaasita/ore_markdown', {
+      \ 'build' : {
+      \     'windows' : 'bundle install --gemfile .\bin\Gemfile',
+      \     'mac' : 'bundle install --gemfile ./bin/Gemfile',
+      \     'unix' : 'bundle install --gemfile ./bin/Gemfile'
+      \    },
+      \ }
+      NeoBundle 'othree/html5.vim'
+      NeoBundle 'vim-jp/vimdoc-ja'
+
+
 NeoBundleLazy 'alpaca-tc/neorspec.vim', {
     \ 'depends' : 'tpope/vim-rails',
     \ 'autoload' : {
@@ -168,10 +182,6 @@ nnoremap <silent>, vs :<C-U>VimShell<CR>
 "unlet s:bundle
 " }}}
 
-" <TAB>: completion.                                         
-" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
-inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>" 
-
 autocmd BufNewFile, BufRead *.text set spell
 autocmd BufNewFile, BufRead *.md set spell
 
@@ -183,7 +193,6 @@ set backspace=indent,eol,start
 autocmd BufEnter * if exists("b:rails_root") | NeoComplCacheSetFileType ruby.rails | endif
 autocmd BufEnter * if (expand("%") =~ "_spec\.rb$") || (expand("%") =~ "^spec.*\.rb$") | NeoComplCacheSetFileType ruby.rspec | endif
 " neocomplcacheはもうメンテされていない
-let g:neocomplcache_snippets_dir = $HOME . '/.vim/snippets'
 nnoremap <Space>se :<C-U>NeoComplCacheEditSnippets<CR>
 
 "Plugin key-mappings.
@@ -191,66 +200,40 @@ imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
-  
 " For snippet_complete marker.
 if has('conceal')
   set conceallevel=2 concealcursor=i
 endif
 
 let g:neosnippet#enable_snipmate_compatibility = 1
-
 " Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/bundle/snipmate-snippets/snippets'
+let g:neosnippet#snippets_directory='~/.vim/snippets/snippets'
 
-set runtimepath +=$HOME/.vim/snippets/snippets
+" vim: foldmethod=marker
+" vim" foldcolumn=3
+" vim" foldlevel=0
 
-set encoding=utf-8
-set fileencodings=ucs_bom,utf8,ucs-2le,ucs-2
-set fileformats=unix,dos,mac
+let g:unite_enable_start_insert=1
 
-  if &encoding !=# 'utf-8'
-  set encoding=japan
-  set fileencoding=japan
-  endif
-  if has('iconv')
-  let s:enc_euc = 'euc-jp'
-  let s:enc_jis = 'iso-2022-jp'
-
-  if iconv("\x87\x64\x87\x6a", 'cp932', 'eucjp-ms') ==# "\xad\xc5\xad\xcb"
-  let s:enc_euc = 'eucjp-ms'
-  let s:enc_jis = 'iso-2022-jp-3'
-  elseif iconv("\x87\x64\x87\x6a", 'cp932', 'euc-jisx0213') ==# "\xad\xc5\xad\xcb"
-  let s:enc_euc = 'euc-jisx0213'
-  let s:enc_jis = 'iso-2022-jp-3'
-  endif
-  if &encoding ==# 'utf-8'
-  let s:fileencodings_default = &fileencodings
-  let &fileencodings = s:enc_jis .','. s:enc_euc .',cp932'
-  let &fileencodings = s:fileencodings_default .','. &fileencodings
-  unlet s:fileencodings_default
+set completefunc=GoogleComplete
+ 
+function! GoogleComplete(findstart, base)
+  if a:findstart
+    let line = getline('.')
+    let start = col('.') - 1
+    while start > 0 && line[start - 1] =~ '\S'
+      let start -= 1
+    endwhile
+    return start
   else
-  let &fileencodings = &fileencodings .','. s:enc_jis
-  set fileencodings+=utf-8,ucs-2le,ucs-2
-  if &encoding =~# '^\(euc-jp\|euc-jisx0213\|eucjp-ms\)$'
-  set fileencodings+=cp932
-  set fileencodings-=euc-jp
-  set fileencodings-=euc-jisx0213
-  set fileencodings-=eucjp-ms
-  let &encoding = s:enc_euc
-  let &fileencoding = s:enc_euc
-  else
-  let &fileencodings = &fileencodings .','. s:enc_euc
+    let ret = system('curl -s -G --data-urlencode "q='
+    \ . a:base . '" "http://suggestqueries.google.com/complete/search?&client=firefox&hl=ja&ie=utf8&oe=utf8"')
+    let res = split(substitute(ret,'\[\|\]\|"',"","g"),",")
+    return res
   endif
-  endif
-  " 定数を処分
-  unlet s:enc_euc
-  unlet s:enc_jis
-  endif
-  "     }}} 
+endfunction
+
+vnoremap ' di'<C-R>"'<ESC>
+inoremap <silent> jj <ESC>
+set showcmd
+

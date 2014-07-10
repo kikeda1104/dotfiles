@@ -2,17 +2,23 @@
 PATH=$PATH:$HOME/
 export PATH="/usr/local/heroku/bin:$PATH"
 export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
+#export CC=/opt/local/bin/i686-apple-darwin13-gcc-apple-4.2.1
+#export CXX=/opt/local/bin/i686-apple-darwin13-g++-apple-4.2.1
+#export CPP=/opt/local/bin/i686-apple-darwin13-gpp-apple-4.2.1
+#
+##export LD_LIBRARY_PATH=$HOME/lib
+#export USERNAME BASH_ENV PATH GEM_HOME GEM_PATH
 
 alias vi='env LANG=ja_JP.UTF-8 /opt/local/bin/vim'
 alias vim='env LANG=ja_JP.UTF-8 /opt/local/bin/vim'
-alias g='git'
-alias gst='g status'
-alias gco='g checkout'
-alias gci='g commit'
-alias gdi='g diff'
-alias gbr='g branch'
+#alias g='git'
+#alias gst='g status'
+#alias gco='g checkout'
+#alias gci='g commit'
+#alias gdi='g diff'
+#alias gbr='g branch'
 alias be='bundle exec'
-alias r='rails'
+#alias r='rails'
 alias l='ls -l'
 
 PATH="$HOME/.rbenv/bin:$PATH"
@@ -139,3 +145,9 @@ fpath=(~/.zsh/completion $fpath)
 autoload -U compinit
 compinit -u
 
+export LC_ALL=en_US.UTF-8
+
+# キーバインドをviに変更
+set -o vi
+export PATH="$HOME/.phpenv/bin:$PATH"
+eval "$(phpenv init -)"
