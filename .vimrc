@@ -39,7 +39,6 @@ NeoBundle 'Shougo/vimproc', {
       NeoBundle 'git://github.com/tyru/open-browser.vim.git'
       NeoBundle 'git://github.com/tpope/vim-cucumber.git'
       NeoBundle 'git://github.com/pangloss/vim-javascript.git'
-      NeoBundle 'git://github.com/derekwyatt/vim-scala.git'
       NeoBundle 'git://github.com/joker1007/vim-ruby-heredoc-syntax.git'
       NeoBundle 'git://github.com/kchmck/vim-coffee-script.git'
       NeoBundle 'git://github.com/thoughtbot/vim-rspec.git'
@@ -54,7 +53,6 @@ NeoBundle 'Shougo/vimproc', {
       NeoBundle 'git://github.com/tpope/vim-haml.git'
       NeoBundle 'git://github.com/joker1007/unite-pull-request'
       NeoBundle 'git://github.com/LeafCage/yankround.vim.git'
-      NeoBundle 'git://github.com/osyo-manga/vim-over.git'
       NeoBundle 'git://github.com/vim-scripts/dbext.vim.git'
       NeoBundle 'git://github.com/othree/javascript-libraries-syntax.vim'
       NeoBundle 'git://github.com/tpope/vim-fugitive.git'
@@ -68,7 +66,6 @@ NeoBundle 'Shougo/vimproc', {
       \ }
       NeoBundle 'othree/html5.vim'
       NeoBundle 'vim-jp/vimdoc-ja'
-
 
 NeoBundleLazy 'alpaca-tc/neorspec.vim', {
     \ 'depends' : 'tpope/vim-rails',
@@ -88,6 +85,7 @@ NeoBundleLazy 'Shougo/unite.vim', {
       \}
 
 NeoBundleLazy 'Shougo/neosnippet'
+
 NeoBundleLazy 'Shougo/vimshell', {
       \ 'depends' : 'Shougo/vimproc',
       \ 'autoload' : {
@@ -104,18 +102,16 @@ NeoBundleCheck
       syntax on
 
 
-      " SSH クライアントの設定によってはマウスが使える（putty
-      " だと最初からいける）
-      set mouse=n
+set mouse=n
 " 編集中のファイルのディレクトリに移動
 noremap ,d :execute ":lcd" . expand("%:p:h")<CR>
 
 if has("autocmd")
-            autocmd BufReadPost *
-                \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-                \   exe "normal! g'\"" |
-                \ endif
-    endif
+    autocmd BufReadPost *
+        \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+        \   exe "normal! g'\"" |
+        \ endif
+endif
 " 行番号を表示
 set number
 " color scheme
@@ -182,6 +178,7 @@ nnoremap <silent>, vs :<C-U>VimShell<CR>
 "unlet s:bundle
 " }}}
 
+<<<<<<< HEAD
 autocmd BufNewFile, BufRead *.text set spell
 autocmd BufNewFile, BufRead *.md set spell
 
@@ -200,8 +197,20 @@ imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 
+" <TAB>: completion.                                         
+" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"   
+inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>" 
+
+" Plugin key-mappings.
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+smap <C-k> <Plug>(neosnippet_expand_or_jump)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
 " For snippet_complete marker.
-if has('conceal')
+if has('conceal') 
   set conceallevel=2 concealcursor=i
 endif
 
@@ -237,3 +246,13 @@ vnoremap ' di'<C-R>"'<ESC>
 inoremap <silent> jj <ESC>
 set showcmd
 
+
+command Rc Rcontroller
+command Rm Rmodel
+command Rv Rview
+
+set backspace=indent,eol,start
+
+inoremap <silent> jj <ESC>
+
+let g:unite_enable_start_insert=1
