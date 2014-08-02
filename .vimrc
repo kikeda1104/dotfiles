@@ -255,3 +255,36 @@ set backspace=indent,eol,start
 inoremap <silent> jj <ESC>
 
 let g:unite_enable_start_insert=1
+
+command! -nargs=? Eiwa call Goo("ej",<f-args>)
+command! -nargs=? Kokugo call Goo("jn",<f-args>)
+command! -nargs=? Waei call Goo("je",<f-args>)
+function! Goo(jisyo,...) "{{{2
+  if has('win32') || has('gui_running')
+    let l:cmd = "!"
+  else
+    let l:cmd = "!clear && "
+  endif
+
+  if a:0 == 0
+    let l:search_word = expand("<cword>")
+  else
+    let l:search_word = a:1
+  endif
+  if a:jisyo == "ej"
+    let l:search_tag = " | perl -nle 'print if /alllist/i../<\\/dl>/ or /prog_meaning/'"
+  elseif a:jisyo == "je"
+    let l:search_tag = " | perl -nle 'print if /alllist/i../<\\/dl>/ or /prog_meaning|prog_example/' "
+  elseif a:jisyo == "jn"
+    let l:search_tag = " | perl -nle 'print if /alllist/i../<\\/dl>/ or /meaning/' "
+  endif
+
+  execute l:cmd . "curl -s -L " .
+                  \ "http://dictionary.goo.ne.jp/srch/" . a:jisyo . "/" .
+                  \ "$(echo " . l:search_word . " | nkf -wMQ | tr = \\%)" .
+                  \ "/m1u/ " .
+                  \ l:search_tag .
+                  \ " | perl -ple 's/<.+?>//g'"
+                  \ " | head -50"
+
+endfunction "}}}
