@@ -52,6 +52,7 @@ NeoBundleLazy 'Shougo/unite.vim', {
       \}
 
 NeoBundleCheck
+
       filetype plugin on
       filetype indent on
       syntax on
@@ -93,7 +94,7 @@ augroup END
 highlight CursorLine ctermbg=black guibg=black
 
 augroup MyAutoCmdFileType
-  autocmd! MyAutoCmdFileType
+autocmd! MyAutoCmdFileType
 
 " ウィンドウサイズの指定
 "set columns=130
@@ -135,6 +136,7 @@ endif
 let g:neosnippet#enable_snipmate_compatibility = 1
 " Tell Neosnippet about the other snippets
 let g:neosnippet#snippets_directory='~/.vim/snippets/snippets'
+" let g:neosnippet#snippets_directory=[ expand("~")."/.vim/snippets" ]
 
 " vim: foldmethod=marker
 " vim" foldcolumn=3
@@ -247,3 +249,5 @@ function! Goo(jisyo,...) "{{{2
   \ " | head -50"
 
 endfunction "}}}
+
+nnoremap sp :Unite neosnippet<CR>
