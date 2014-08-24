@@ -1,0 +1,14 @@
+snippet     redirect_to
+abbr        redirect
+  redirect_to ${1}
+
+snippet auth
+addr  Basic認証
+  private
+  def auth
+    authenticate_or_request_with_http_basic do |user, pass|
+      user == 'user' && pass == 'pass'   
+    end
+  end
+
+
