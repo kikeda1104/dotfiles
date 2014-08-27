@@ -162,54 +162,13 @@ snippet     partial
 abbr        partial: 
     partial: 
 
-snippet desc
-abbr    describe end
-prev_word '^'
-    describe "${1:name}" do
-        ${2}
+snippet class EmailVa
+addr    email_validator:
+  class EmailValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      unless value =~ /\A({[^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+        record.errors[attributes] << (options[:messge] || "is not an email")
+      end 
     end
+  end
 
-snippet desch
-abbr    spec_helper describe
-    require 'spec_helper'
-
-    describe ${1:`Snippet_RubySpecNameFromFilename()`} do
-        ${2}
-    end
-
-snippet desccon
-    describe "${1:GET|POST|PUT|DELETE} ${2:/some/path}${3}" do
-        ${4}
-    end
-
-snippet bef
-    before do
-        ${1}
-    end
-
-alias bef before
-
-snippet befa
-    before(:all) do
-        ${1}
-    end
-
-alias befa beforeall
-
-snippet aft
-    after do
-        ${1}
-    end
-
-alias aft after
-
-snippet afta
-    after(:all) do
-        ${1}
-    end
-
-alias afta afterall
-
-snippet con
-    context "${1}" do
-# vim:set et ts=2 sts=2 sw=2 tw=0:

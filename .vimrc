@@ -251,3 +251,4 @@ function! Goo(jisyo,...) "{{{2
 endfunction "}}}
 
 nnoremap sp :Unite neosnippet<CR>
+nnoremap se :NeoSnippetEdit<CR>

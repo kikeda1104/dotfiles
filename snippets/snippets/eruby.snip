@@ -1,0 +1,251 @@
+snippet header_page
+addr    簡易版ヘッダーページ
+<header class="col-md-12">
+  <div class="banner" style="margin: 10px 0;">
+    <a href="/">
+      <img alt="トップバナー" src="bps_logo.png" width="211" height="46" />
+    </a>
+  </div>
+
+  <nav class="navbar navbar-default">
+    <div class="navbar-header">
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">TOP</a></li>
+          <li><a href="http://www.bpsinc.jp/about.html" target="_blank">会社概要</a></li>
+          <li><a href="http://www.bpsinc.jp/ruby_on_rails.html" target="_blank">業務概要</a></li>
+          <li><a href="http://www.bpsinc.jp/privacy.html" target="_blank">プライバシーポリシー</a></li>
+          <li><%= link_to '問い合わせ', '/application_forms' %></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+snippet footer_page
+addr    簡易版フッターページ  
+<div class="col-md-12" style="margin-top: 10px;">
+  <footer>
+    <div class="panel panel-default" style="margin-bottom: 0;">
+      <div class="panel-body">
+        <ul>
+          <li><a href="http://www.bpsinc.jp/about.html">会社概要</a></li> 
+          <li><a href="http://www.bpsinc.jp/ruby_on_rails.html ">業務概要</a></li> 
+          <li><a href="http://www.bpsinc.jp/privacy.html">プライバシーポリシー</a></li> 
+          <li><a href="http://www.bpsinc.jp/privacy.html">お問い合わせ</a></li> 
+        </ul>
+      </div>
+    </div>
+    <small style="text-align: center;">Copyright (C) 2014 Above Perspective Solutions株式会社. All Rights Reserved.</small>
+  </footer>
+</div>
+
+snippet contact_new_page
+addr    簡易版問い合わせ作成ページ
+<div class="page-hedaer">
+  <h1>案件相談申し込みフォーム</h1>
+</div>
+
+<%= form_for(@application_form, class: 'form-horizontal' , role: 'form') do |f| %>
+  <% if @application_form.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @application_form.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <div class="form-group">
+    <%= f.label :company_name %>
+    <%= f.text_field :company_name , class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :charge_name %>
+    <%= f.text_field :charge_name , class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.text_field :email , class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <% # FIXME: 日本語の値に変換する %>
+    <%= f.label :industry %>
+    <div>
+      <%= f.select :industry, ApplicationForm.industries, {},{ class: 'form-control' } %>
+    </div>
+    <mark>複数該当するものがある場合、またはお問い合わせ段階で開示できない場合「その他」をお選び下さい</mark>
+  </div>
+
+  <div class="form-group">
+    <% # FIXME: 日本語の値に変換する %>
+    <%= f.label :item %>
+    <div>
+      <%= f.select :item, ApplicationForm.items, {}, { class: 'form-control' } %>
+    </div>
+    <mark>複数該当するものがある場合、またはお問い合わせ段階で開示できない場合「その他」をお選び下さい</mark>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :free_text %>
+    <%= f.text_area :free_text, class: 'form-control' %>
+  </div>
+
+  <div>
+    <%= check_box_tag 'assign', true, false, {} %> 
+    登録内容の扱いに同意する
+  </div>
+  <div class="">
+    <%= link_to 'プライバシポリシー', 'http://www.bpsinc.jp/privacy-handling.html' %>
+  </div>
+
+  <%= f.submit '確認', class: 'btn btn-default', data: { disable_with: '送信中' } %>
+<% end %>
+
+snippet contact_confirm_page
+addr    問い合わせ確認ページ
+<div class="page-hedaer">
+  <h1>案件相談申し込み確認フォーム</h1>
+</div>
+
+<%= form_for(@application_form, class: 'form-horizontal' , role: 'form') do |f| %>
+  <% if @application_form.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @application_form.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <fieldset>
+    <div class="form-group">
+      <%= f.label :company_name %>
+      <%= f.text_field :company_name , class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :charge_name %>
+      <%= f.text_field :charge_name , class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.text_field :email , class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :industry %>
+      <div>
+        <%= f.select :industry, ApplicationForm.industries, {},{ class: 'form-control' } %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :item %>
+      <div>
+        <%= f.select :item, ApplicationForm.items, {}, { class: 'form-control' } %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :free_text %>
+      <%= f.text_area :free_text, class: 'form-control' %>
+    </div>
+  </fieldset>
+  <% unless @application_form.errors.any? %>
+    <%= f.button '戻る', class: 'btn btn-default', data: { disable_with: '処理中' } %>
+  <% end %>
+  <%= f.submit '送信', class: 'btn btn-default', data: { disable_with: '送信中' } %>
+<% end %>
+
+snippet top_page
+addr  簡易トップページ
+<div class="col-md-9">
+  <div class="main-content">
+    <h1>TOP Page</h1>
+    <div class="row">
+      <section class="contents">
+        <article class="content">
+          <div class="thumbnail">
+            <img data-src="holder.js/300x300" alt="実績" src="img01.jpg" width="200" height="242" />
+            <div class="caption">
+              <h3>実績</h3>
+              <p>...</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="content">
+          <div class="thumbnail">
+            <img data-src="holder.js/300x300" alt="実績" src="img02.jpg" width="200" height="242" />
+            <div class="caption">
+              <h3>実績</h3>
+              <p>...</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="content">
+          <div class="thumbnail">
+            <img data-src="holder.js/300x300" alt="実績" src="img03.jpg" width="200" height="242" />
+            <div class="caption">
+              <h3>実績</h3>
+              <p>...</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="content">
+          <div class="thumbnail">
+            <img data-src="holder.js/300x300" alt="実績" src="img01.jpg" width="200" height="242" />
+            <div class="caption">
+              <h3>実績</h3>
+              <p>...</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="content">
+          <div class="thumbnail">
+            <img data-src="holder.js/300x300" alt="実績" src="img02.jpg" width="200" height="242" />
+            <div class="caption">
+              <h3>実績</h3>
+              <p>...</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="content">
+          <div class="thumbnail">
+            <img data-src="holder.js/300x300" alt="実績" src="img03.jpg" width="200" height="242" />
+            <div class="caption">
+              <h3>実績</h3>
+              <p>...</p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </div>
+  </div>
+</div>
+
+snippet side_menu
+addr    簡易版サイドメニュー
+<div class="side-menu col-md-3">
+  <div class="panel panel-default">
+    <h3 class="panel-heading" style="margin: 0;">サイドメニュー</h3>
+    <ul class="panel-body">
+      <li><a href="/">TOP</a></li>
+      <li><a href="http://www.bpsinc.jp/about.html" target="_blank">会社概要</a></li>
+      <li><a href="http://www.bpsinc.jp/ruby_on_rails.html" target="_blank">業務概要</a></li>
+      <li><a href="http://www.bpsinc.jp/privacy.html" target="_blank">プライバシーポリシー</a></li>
+      <li><%= link_to '問い合わせ', '/application_forms'%></li>
+    </ul>
+  </div>
+</div>
