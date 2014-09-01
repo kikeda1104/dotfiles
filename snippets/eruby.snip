@@ -230,3 +230,19 @@ addr    問い合わせ確認ページ
       <%= f.submit '送信', class: 'btn btn-default', data: { disable_with: '送信中' } %>
     <% end %>
 
+snippet <%= render par
+addr    部分テンプレート
+  <%= render partial: ${1:template_name} %>
+
+snippet layout_page
+addr  レイアウトページ
+  <div class="row">
+    <div class="container">
+       <%= render partial: 'common/header' %>
+       <%= render partial: 'common/side_menu' %>
+       <div class="col-md-9">
+         <%= yield %>
+       </div>
+       <%= render partial: 'common/footer' %>
+     </div> 
+  </div>
