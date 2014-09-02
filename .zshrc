@@ -34,7 +34,7 @@ export PGHOST=localhost
 ###
 #
 ## MacPorts Installer addition on 2013-07-08_at_01:54:22: adding an appropriate PATH variable for use with MacPorts.
-#export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
 ## Finished adapting your PATH environment variable
 
 ## zshrc
@@ -149,5 +149,11 @@ export LC_ALL=en_US.UTF-8
 
 # キーバインドをviに変更
 set -o vi
-export PATH="$HOME/.phpenv/bin:$PATH"
-eval "$(phpenv init -)"
+export PATH="$HOME:$PATH"
+export PATH="$HOME/android-sdks/platform-tools:$PATH"
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+export PATH="/opt/local/lib/python2.7/site-packages:$PATH"
+export PYTHONPATH="/opt/local/lib/python2.7/site-packages"
+
