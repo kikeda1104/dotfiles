@@ -1,0 +1,10 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  RunRailsCops: true 
+
+Style/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Style/StringLiterals:
+  Enabled: false
