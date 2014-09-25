@@ -43,6 +43,7 @@ if has('vim_starting')
       NeoBundle 'othree/html5.vim'
       NeoBundle 'vim-jp/vimdoc-ja'
       NeoBundle 'https://github.com/tell-k/vim-browsereload-mac.git'
+      NeoBundle 'https://github.com/koron/codic-vim.git'
 
 
 NeoBundleLazy 'Shougo/unite.vim', {
@@ -53,8 +54,7 @@ NeoBundleLazy 'Shougo/unite.vim', {
 
 NeoBundleCheck
 
-      filetype plugin on
-      filetype indent on
+      filetype plugin indent on
       syntax on
 
       " SSH クライアントの設定によってはマウスが使える（putty
@@ -135,7 +135,7 @@ endif
 
 let g:neosnippet#enable_snipmate_compatibility = 1
 " Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/snippets/snippets'
+let g:neosnippet#snippets_directory='~/.vim/snippets'
 " let g:neosnippet#snippets_directory=[ expand("~")."/.vim/snippets" ]
 
 " vim: foldmethod=marker
@@ -251,4 +251,5 @@ function! Goo(jisyo,...) "{{{2
 endfunction "}}}
 
 nnoremap sp :Unite neosnippet<CR>
-nnoremap se :NeoSnippetEdit<CR>
+
+
