@@ -3,24 +3,52 @@ set nocompatible
 set noswapfile
 set undodir=~/.vim/backup
 set backupdir=~/.vim/backup
-set shiftwidth=2
-set softtabstop=0
-set expandtab
 set title
 set clipboard=unnamed,autoselect
+set foldmethod=marker
+"set fileencodings=sjis,utf-8,iso-2022-jp,euc-jp
+set autoindent
+set tabstop=2
+set expandtab
+set softtabstop=2
+set shiftwidth=2
+set cursorline
+
+autocmd BufWritePre * :%s/\s\+$//ge
+
+function! s:remove_dust()
+    let cursor = getpos(".")
+    " 保存時に行末の空白を除去する
+    %s/\s\+$//ge
+    " 保存時にtabを2スペースに変換する
+    %s/\t/  /ge
+    call setpos(".", cursor)
+    unlet cursor
+endfunction
+autocmd BufWritePre * call <SID>remove_dust()
+
 " モードラインを有効にする
 set modeline
-
 
 " 3行目までをモードラインとして検索する
 set modelines=3
 
-if has('vim_starting')
-              execute 'set runtimepath+=' . expand('~/.vim/bundle/neobundle.vim')
-      endif
-      call neobundle#rc(expand('~/.vim/bundle'))
+" ヘルプ日本語から英語
+set helplang=ja,en
 
-      NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
+if 0 | endif
+
+if has('vim_starting')
+  if &compatible
+    set nocompatible               " Be iMproved
+  endif
+
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+
+  call neobundle#begin(expand('~/.vim/bundle'))
+  NeoBundleFetch 'Shougo/neobundle.vim'
+
       NeoBundle 'git://github.com/scrooloose/nerdtree.git'
       NeoBundle 'git://github.com/tpope/vim-rails.git'
       NeoBundle 'git://github.com/tyru/open-browser.vim.git'
@@ -29,7 +57,6 @@ if has('vim_starting')
       NeoBundle 'git://github.com/thoughtbot/vim-rspec.git'
       NeoBundle 'git://github.com/ujihisa/unite-gem.git'
       NeoBundle 'git://github.com/tpope/vim-haml.git'
-      NeoBundle 'git://github.com/LeafCage/yankround.vim.git'
       NeoBundle 'git://github.com/tpope/vim-fugitive.git'
       NeoBundle 'Shougo/neosnippet'
       NeoBundle 'Shougo/neosnippet-snippets'
@@ -44,7 +71,15 @@ if has('vim_starting')
       NeoBundle 'vim-jp/vimdoc-ja'
       NeoBundle 'https://github.com/tell-k/vim-browsereload-mac.git'
       NeoBundle 'https://github.com/koron/codic-vim.git'
+      NeoBundle 'https://github.com/Shougo/neocomplcache.vim.git'
+      NeoBundle 'yaasita/myvimrc'
+      NeoBundle 'yaasita/rjcolor'
+      NeoBundle 'pangloss/vim-javascript'
+      NeoBundle 'jiangmiao/simple-javascript-indenter'
+      NeoBundle 'https://github.com/szw/vim-tags.git'
+      NeoBundle 'scrooloose/syntastic'
 
+NeoBundleLazy 'jelera/vim-javascript-syntax', {'autoload':{'filetypes':['javascript']}}
 
 NeoBundleLazy 'Shougo/unite.vim', {
       \   'autoload' : {
@@ -52,36 +87,36 @@ NeoBundleLazy 'Shougo/unite.vim', {
       \   }
       \}
 
+NeoBundleLazy 'marcus/rsense', {
+      \ 'autoload': {
+      \   'filetypes': 'ruby',
+      \ },
+      \ }
+
+call neobundle#end()
+
+filetype plugin indent on
+filetype indent on
+syntax on
+
 NeoBundleCheck
 
-      filetype plugin indent on
-      syntax on
-
-      " SSH クライアントの設定によってはマウスが使える（putty
-      " だと最初からいける）
-      set mouse=n
 " 編集中のファイルのディレクトリに移動
 noremap ,d :execute ":lcd" . expand("%:p:h")<CR>
 
 if has("autocmd")
-            autocmd BufReadPost *
-                \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-                \   exe "normal! g'\"" |
-                \ endif
-    endif
+  autocmd BufReadPost *
+  \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+  \   exe "normal! g'\"" |
+  \ endif
+endif
+
 " 行番号を表示
 set number
 " color scheme
 colorscheme railscasts
+au BufNewFile,BufRead *.tag setlocal ft=javascript
 
-" Tabをスペースに置き換える
-set tabstop=2
-"set autoindent
-set expandtab
-set shiftwidth=2
-
-" カーソル行をハイライト
-set cursorline
 " " カレントウィンドウにのみ罫線を引く
 augroup cch
 autocmd! cch
@@ -96,14 +131,9 @@ highlight CursorLine ctermbg=black guibg=black
 augroup MyAutoCmdFileType
 autocmd! MyAutoCmdFileType
 
-" ウィンドウサイズの指定
-"set columns=130
-"set lines=80
-"set autoread
-
 nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
-nmap map-you-like <Plug>(openbrowser-search) 
+nmap map-you-like <Plug>(openbrowser-search)
 
 let g:vim_tags_project_tags_command = "/opt/local/bin/ctags -R {OPTIONS} {DIRECTORY} 2>/dev/null"
 let g:vim_tags_gem_tags_command = "/opt/local/bin/ctags -R {OPTIONS} `bundle show --paths` 2>/dev/null"
@@ -138,29 +168,25 @@ let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#snippets_directory='~/.vim/snippets'
 " let g:neosnippet#snippets_directory=[ expand("~")."/.vim/snippets" ]
 
-" vim: foldmethod=marker
-" vim" foldcolumn=3
-" vim" foldlevel=0
-
 let g:unite_enable_start_insert=1
 
-set completefunc=GoogleComplete
- 
-function! GoogleComplete(findstart, base)
-  if a:findstart
-    let line = getline('.')
-    let start = col('.') - 1
-    while start > 0 && line[start - 1] =~ '\S'
-      let start -= 1
-    endwhile
-    return start
-  else
-    let ret = system('curl -s -G --data-urlencode "q='
-    \ . a:base . '" "http://suggestqueries.google.com/complete/search?&client=firefox&hl=ja&ie=utf8&oe=utf8"')
-    let res = split(substitute(ret,'\[\|\]\|"',"","g"),",")
-    return res
-  endif
-endfunction
+"set completefunc=GoogleComplete
+"
+"function! GoogleComplete(findstart, base)
+"  if a:findstart
+"    let line = getline('.')
+"    let start = col('.') - 1
+"    while start > 0 && line[start - 1] =~ '\S'
+"      let start -= 1
+"    endwhile
+"    return start
+"  else
+"    let ret = system('curl -s -G --data-urlencode "q='
+"    \ . a:base . '" "http://suggestqueries.google.com/complete/search?&client=firefox&hl=ja&ie=utf8&oe=utf8"')
+"    let res = split(substitute(ret,'\[\|\]\|"',"","g"),",")
+"    return res
+"  endif
+"endfunction
 
 vnoremap ' di'<C-R>"'<ESC>
 inoremap <silent> jj <ESC>
@@ -252,4 +278,21 @@ endfunction "}}}
 
 nnoremap sp :Unite neosnippet<CR>
 
+" set paste
+let g:rsenseUseOmniFunc = 1
+
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_min_syntax_length = 3
+
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+inoremap <expr><C-g>  neocomplcache#undo_completion()
+inoremap <expr><C-l>  neocomplcache#complete_common_string()
+
+let g:SimpleJsIndenter_BriefMode = 2
+
+let g:syntastic_mode_map = { 'mode': 'active',
+            \ 'active_filetypes': ['ruby'] }
+let g:syntastic_ruby_checkers = ['rubocop']
 
