@@ -15,9 +15,9 @@ if &compatible
   set nocompatible               " Be iMproved
 endif
 
-set runtimepath^=~/.vim/repos/github.com/Shougo/dein.vim
-
- call dein#begin(expand('~/.cache/dein'))
+execute 'set runtimepath^=~/.vim/repos/github.com/Shougo/dein.vim'
+" Required:
+ call dein#begin('~/cache/dein')
 
  call dein#add('Shougo/dein.vim')
  call dein#add('Shougo/neocomplete.vim')
@@ -27,9 +27,12 @@ set runtimepath^=~/.vim/repos/github.com/Shougo/dein.vim
  call dein#add('vim-jp/vimdoc-ja')
  call dein#add('jpo/vim-railscasts-theme')
 
- call dein#end()
+call dein#end()
+if dein#check_install()
+  call dein#install()
+endif
 
- filetype plugin indent on
+filetype plugin indent on
 
 set clipboard=unnamedplus,autoselect
 
@@ -42,13 +45,21 @@ set expandtab
 set softtabstop=2
 set shiftwidth=2
 
-colorscheme railscasts
+"colorscheme railscasts
 
 inoremap <silent> jj <ESC>
 
 " ヘルプ日本語から英語
 set helplang=ja,en
 
-let g:syntastic_mode_map = { 'mode': 'active',
-            \ 'active_filetypes': ['ruby'] }
+let g:syntastic_enable_signs=1
+let g:syntastic_mode_map = { 'mode': 'possive' }
 let g:syntastic_ruby_checkers = ['rubocop']
+augroup AutoSyntastic
+    autocmd!
+    autocmd InsertLeave,TextChanged * call s:syntastic()
+augroup END
+function! s:syntastic()
+    w
+    SyntasticCheck
+endfunction
