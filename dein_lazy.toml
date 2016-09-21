@@ -1,0 +1,5 @@
+[[plugins]]
+repo = 'vim-jp/vimdoc-ja'
+
+[[plugins]]
+repo = 'Shougo/neosnippet'

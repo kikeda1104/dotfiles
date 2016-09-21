@@ -1,0 +1,21 @@
+[[plugins]]
+repo = 'yaasita/ore_markdown'
+hook_post_update = '''
+let cmd = 'bundle install --gemfile=~/.cache/dein/repos/github.com/yaasita/ore_markdown/bin/Gemfile'
+let g:dein#plugin.build = cmd
+'''
+
+[[plugins]]
+repo = 'Shougo/neocomplete.vim'
+
+[[plugins]]
+repo = 'tpope/vim-rails'
+
+[[plugins]]
+repo = 'tpope/vim-bundler'
+
+[[plugins]]
+repo = 'scrooloose/syntastic'
+
+[[plugins]]
+repo = 'jpo/vim-railscasts-theme'
