@@ -1,7 +1,29 @@
 
-PATH=$PATH:$HOME/
+# 日本語を使用
+export LANG=ja_JP.UTF-8
+# 色を使用
+autoload -Uz colors
+colors
+# 補完
+autoload -Uz compinit
+# cdコマンドを省略して、ディレクトリ名のみの入力で移動
+setopt auto_cd
+
+# 自動でpushdを実行
+setopt auto_pushd
+
+# pushdから重複を削除
+setopt pushd_ignore_dups
+
+# コマンドミスを修正
+setopt correct
+
+setopt no_flow_control
+
+compinit
 export PATH="/usr/local/heroku/bin:$PATH"
-export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
+export PATH=$HOME/.nodebrew/current/bin:$PATH
+#export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
 #export CC=/opt/local/bin/i686-apple-darwin13-gcc-apple-4.2.1
 #export CXX=/opt/local/bin/i686-apple-darwin13-g++-apple-4.2.1
 #export CPP=/opt/local/bin/i686-apple-darwin13-gpp-apple-4.2.1
@@ -9,8 +31,8 @@ export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
 ##export LD_LIBRARY_PATH=$HOME/lib
 #export USERNAME BASH_ENV PATH GEM_HOME GEM_PATH
 
-alias vi='env LANG=ja_JP.UTF-8 /opt/local/bin/vim'
-alias vim='env LANG=ja_JP.UTF-8 /opt/local/bin/vim'
+#alias vi='env LANG=ja_JP.UTF-8 /usr/local/bin/vim'
+#alias vim='env LANG=ja_JP.UTF-8 /usr/local/bin/vim'
 #alias g='git'
 #alias gst='g status'
 #alias gco='g checkout'
@@ -19,14 +41,14 @@ alias vim='env LANG=ja_JP.UTF-8 /opt/local/bin/vim'
 #alias gbr='g branch'
 alias be='bundle exec'
 #alias r='rails'
-alias l='ls -l'
+alias l='ls -l --color'
+alias vi='vim'
+alias nb='set -u BUNDLE_GEMFILE bundle install'
 
 PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init - zsh)"
+eval "$(rbenv init -)"
 
 PATH="$HOME/node_modules/coffee-script/bin:$PATH"
-PATH="/opt/local/bin:$PATH"
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 export PATH=/Users/Kikeda/adt-bundle-mac-x86_64-20131030/sdk/platform-tools:$PATH
 export PGHOST=localhost
 ##
@@ -60,11 +82,11 @@ autoload -U colors; colors
 
  ##historyの設定
 # historyを保存するファイル
-HISTFILE=~/.zsh/.zsh_history
+export HISTFILE=~/.zsh/.zsh_history
 # 大きな数を指定してhistoryを残す
-HISTSIZE=10000000
+export HISTSIZE=10000000
 # 保存するhistory数
-SAVEHIST=$HISTSIZE
+export SAVEHIST=$HISTSIZE
 # コマンドラインだけではなく実行時刻と実行時間も保存する
 setopt extended_history
 # 複数のzshを同時に使う時などhistoryファイルに上書きせず追加する
@@ -82,6 +104,26 @@ setopt hist_no_store
 # 余分なスペースを削除して記録する
 setopt hist_reduce_blanks
 
+function history-all { history -E 1 }
+
+# ヒストリに追加されるコマンド行が古いものと同じなら古いものを削除
+setopt hist_ignore_all_dups
+
+# スペースで始まるコマンド行はヒストリリストから削除
+setopt hist_ignore_space
+
+# ヒストリを呼び出してから実行する間に一旦編集可能
+setopt hist_verify
+# 古いコマンドと同じものは無視
+setopt hist_save_no_dups
+
+# 補完時にヒストリを自動的に展開
+setopt hist_expand
+
+# インクリメンタルからの検索
+bindkey "^R" history-incremental-search-backward
+bindkey "^S" history-incremental-search-forward
+
 # C-s C-qを無効
 setopt no_flow_control
 
@@ -91,7 +133,6 @@ setopt auto_cd
 # 補完候補が複数ある時に一覧を表示する
 setopt auto_list
 
-# 保管結果を詰める
 setopt list_packed
 
 # Tabで順に補完候補を自動で補完する
@@ -131,7 +172,7 @@ precmd() {
   [[ -t 1 ]] || return
   case $TERM in
     *xterm*|rxvt|(dt|k|E)term)
-      print -Pn "\e]2;[%~]\a"    
+      print -Pn "\e]2;[%~]\a"
       ;;
       # screen)
       #      #print -Pn "\e]0;[%n@%m %~] [%l]\a"
@@ -157,3 +198,12 @@ export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="/opt/local/lib/python2.7/site-packages:$PATH"
 export PYTHONPATH="/opt/local/lib/python2.7/site-packages"
 
+export SVN_EDITOR="vi"
+export RSENSE_HOME="/opt/rsense"
+export PATH="/usr/local/sbin:$PATH"
+
+# Gemfile.local
+#export BUNDLE_GEMFILE="Gemfile.local"
+#
+bindkey '^r' history-incremental-pattern-search-backward
+bindkey '^s' history-incremental-pattern-search-forward
