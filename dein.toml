@@ -1,5 +1,4 @@
-[[plugins]]
-repo = 'yaasita/ore_markdown'
+[[plugins]] repo = 'yaasita/ore_markdown'
 hook_post_update = '''
 let cmd = 'bundle install --gemfile=~/.cache/dein/repos/github.com/yaasita/ore_markdown/bin/Gemfile'
 let g:dein#plugin.build = cmd
@@ -9,13 +8,24 @@ let g:dein#plugin.build = cmd
 repo = 'Shougo/neocomplete.vim'
 
 [[plugins]]
-repo = 'tpope/vim-rails'
-
-[[plugins]]
-repo = 'tpope/vim-bundler'
-
-[[plugins]]
 repo = 'scrooloose/syntastic'
 
 [[plugins]]
 repo = 'jpo/vim-railscasts-theme'
+
+[[plugins]]
+repo = 'tpope/vim-endwise'
+
+[[plugins]]
+repo = 'soramugi/auto-ctags.vim'
+
+[[plugins]]
+repo = 'shougo/unite.vim'
+
+[[plugins]]
+repo = 'Shougo/neosnippet'
+
+[[plugins]]
+repo = 'Shougo/neosnippet-snippets'
+
+
