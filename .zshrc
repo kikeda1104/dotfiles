@@ -131,7 +131,7 @@ precmd() {
   [[ -t 1 ]] || return
   case $TERM in
     *xterm*|rxvt|(dt|k|E)term)
-      print -Pn "\e]2;[%~]\a"    
+      print -Pn "\e]2;[%~]\a"
       ;;
       # screen)
       #      #print -Pn "\e]0;[%n@%m %~] [%l]\a"
@@ -149,11 +149,5 @@ export LC_ALL=en_US.UTF-8
 
 # キーバインドをviに変更
 set -o vi
-export PATH="$HOME:$PATH"
-export PATH="$HOME/android-sdks/platform-tools:$PATH"
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
-export PATH="/opt/local/lib/python2.7/site-packages:$PATH"
-export PYTHONPATH="/opt/local/lib/python2.7/site-packages"
+bindkey -e
 
