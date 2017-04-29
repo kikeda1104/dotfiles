@@ -1,16 +1,11 @@
-
+typeset -U path cdpath fpath manpath
+export ZPLUG_HOME=/usr/local/opt/zplug
 PATH=$PATH:$HOME/
-export PATH="/usr/local/heroku/bin:$PATH"
-export EDITOR=/Applications/MacVim.app/Contents/MacOS/Vim
-#export CC=/opt/local/bin/i686-apple-darwin13-gcc-apple-4.2.1
-#export CXX=/opt/local/bin/i686-apple-darwin13-g++-apple-4.2.1
-#export CPP=/opt/local/bin/i686-apple-darwin13-gpp-apple-4.2.1
+PATH=~/Qt5.5.1/5.5/clang_64/bin:$PATH
 #
 ##export LD_LIBRARY_PATH=$HOME/lib
 #export USERNAME BASH_ENV PATH GEM_HOME GEM_PATH
 
-alias vi='env LANG=ja_JP.UTF-8 /opt/local/bin/vim'
-alias vim='env LANG=ja_JP.UTF-8 /opt/local/bin/vim'
 #alias g='git'
 #alias gst='g status'
 #alias gco='g checkout'
@@ -20,28 +15,15 @@ alias vim='env LANG=ja_JP.UTF-8 /opt/local/bin/vim'
 alias be='bundle exec'
 #alias r='rails'
 alias l='ls -l'
+alias ct='ctags -R --languages=Ruby -f ~/ruby.tags `pwd`'
 
 PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init - zsh)"
-
-PATH="$HOME/node_modules/coffee-script/bin:$PATH"
-PATH="/opt/local/bin:$PATH"
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-export PATH=/Users/Kikeda/adt-bundle-mac-x86_64-20131030/sdk/platform-tools:$PATH
 export PGHOST=localhost
-##
-## Your previous /Users/Kikeda/.bash_profile file was backed up as /Users/Kikeda/.bash_profile.macports-saved_2013-07-08_at_01:54:22
-###
-#
-## MacPorts Installer addition on 2013-07-08_at_01:54:22: adding an appropriate PATH variable for use with MacPorts.
-export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-## Finished adapting your PATH environment variable
-
-## zshrc
 
 ## コマンドのオプションを強力に補完
 autoload -U compinit
-compinit
+compinit -u
 zstyle ':completion:*:default' menu select=2
 
 # 色の設定
@@ -140,14 +122,61 @@ precmd() {
   esac
 }
 
-fpath=(~/.zsh/completion $fpath)
-
-autoload -U compinit
-compinit -u
-
-export LC_ALL=en_US.UTF-8
+fpath=(/usr/local/share/zsh-completions $fpath)
 
 # キーバインドをviに変更
 set -o vi
+
 bindkey -e
 
+
+# http://qiita.com/b4b4r07/items/f37aadef0b3f740e8c14
+source $ZPLUG_HOME/init.zsh
+
+zplug "mollifier/anyframe"
+zplug "mollifier/cd-gitroot"
+zplug "b4b4r07/enhancd", use:enhancd.sh
+zplug "zsh-users/zsh-history-substring-search", hook-build:"__zsh_version 4.3"
+zplug "zsh-users/zsh-syntax-highlighting", defer:3
+zplug "zsh-users/zsh-completions"
+zplug "junegunn/fzf-bin", as:command, from:gh-r, rename-to:fzf
+zplug "junegunn/fzf", as:command, use:bin/fzf-tmux
+zplug "peco/peco", as:command, from:gh-r, use:"*amd64*"
+zplug "b4b4r07/zsh-gomi", if:"which fzf"
+
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+# Then, source plugins and add commands to $PATH
+zplug load --verbose
+
+autoload -Uz anyframe-init
+anyframe-init
+autoload -Uz cd-gitroot
+alias cg='cd-gitroot'
+
+bindkey '^xb' anyframe-widget-cdr
+bindkey '^x^b' anyframe-widget-checkout-git-branch
+
+bindkey '^xr' anyframe-widget-execute-history
+bindkey '^x^r' anyframe-widget-execute-history
+
+bindkey '^xi' anyframe-widget-put-history
+bindkey '^x^i' anyframe-widget-put-history
+
+bindkey '^xg' anyframe-widget-cd-ghq-repository
+bindkey '^x^g' anyframe-widget-cd-ghq-repository
+
+bindkey '^xk' anyframe-widget-kill
+bindkey '^x^k' anyframe-widget-kill
+
+bindkey '^xe' anyframe-widget-insert-git-branch
+bindkey '^x^e' anyframe-widget-insert-git-branch
+
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+bindkey '^A' history-substring-search-up
