@@ -11,15 +11,6 @@ repo = 'Shougo/neocomplete.vim'
 repo = 'scrooloose/syntastic'
 
 [[plugins]]
-repo = 'jpo/vim-railscasts-theme'
-
-[[plugins]]
-repo = 'tpope/vim-endwise'
-
-[[plugins]]
-repo = 'soramugi/auto-ctags.vim'
-
-[[plugins]]
 repo = 'shougo/unite.vim'
 
 [[plugins]]
@@ -28,4 +19,17 @@ repo = 'Shougo/neosnippet'
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
 
+[[plugins]]
+repo = 'tpope/vim-rails'
 
+[[plugins]]
+repo = 'editorconfig/editorconfig-vim'
+
+[[plugins]]
+repo = 'szw/vim-tags'
+
+[[plugins]]
+repo = 'sunaku/vim-ruby-minitest'
+
+[[plugins]]
+repo = 'fatih/vim-go'
