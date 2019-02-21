@@ -33,3 +33,6 @@ repo = 'sunaku/vim-ruby-minitest'
 
 [[plugins]]
 repo = 'fatih/vim-go'
+
+[[plugins]]
+repo = 'leafgarland/typescript-vim'
